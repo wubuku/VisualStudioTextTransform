@@ -77,6 +77,9 @@ namespace AIT.Tools.VisualStudioTextTransform
                     var engine = new Engine();
                     var input = File.ReadAllText(templateFileName);
                     var output = engine.ProcessTemplate(input, host);
+                    // ////////////////////////
+                    host.Engine = engine;
+                    // ////////////////////////
                     return Tuple.Create(output, host);
                 }
             }

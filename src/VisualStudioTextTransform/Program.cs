@@ -20,6 +20,7 @@ namespace AIT.Tools.VisualStudioTextTransform
         [STAThread]
         public static int Main(string[] arguments)
         {
+            //System.Console.WriteLine(typeof(Uri).Assembly.Location); Console.ReadKey(); return 0;
             try
             {
                 return ExecuteMain(arguments);
@@ -43,8 +44,10 @@ namespace AIT.Tools.VisualStudioTextTransform
             var options = new Options();
             Parser.Default.ParseArguments(opts, options);
 
-            return 
+            var result =
                 TemplateProcessor.ProcessSolution(solutionFileName, options) ? 0 : 1;
+            System.Console.ReadKey();
+            return result;
         }
 
     }

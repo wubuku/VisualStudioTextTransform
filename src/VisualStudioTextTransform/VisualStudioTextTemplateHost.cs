@@ -12,13 +12,14 @@ using AIT.Tools.VisualStudioTextTransform.Properties;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.TextTemplating;
+using Microsoft.VisualStudio.TextTemplating.VSHost;
 
 namespace AIT.Tools.VisualStudioTextTransform
 {
     /// <summary>
     /// See https://msdn.microsoft.com/en-us/library/bb126579.aspx for more details
     /// </summary>
-    public class VisualStudioTextTemplateHost : ITextTemplatingEngineHost, IServiceProvider
+    public class VisualStudioTextTemplateHost : ITextTemplatingEngineHost, IServiceProvider, ITextTemplatingComponents
     {
         private const string DefaultFileExtension = ".txt";
         private const string FileProtocol = "file:///";
@@ -31,6 +32,8 @@ namespace AIT.Tools.VisualStudioTextTransform
         private CompilerErrorCollection _errors;
         private string _fileExtension = DefaultFileExtension;
         private Encoding _outputEncoding = Encoding.UTF8;
+
+        public ITextTemplatingEngine Engine { get; set; }
 
         /// <summary>
         /// /
@@ -88,6 +91,13 @@ namespace AIT.Tools.VisualStudioTextTransform
             // check relative to template file
             yield return Path.Combine(_templateDir, path);
             
+            // ///////////////////////////////
+            foreach (var p in TextTemplateHostSettings.Default.IncludePaths)
+            {
+                yield return Path.Combine(p, path);
+            }
+            // ///////////////////////////////
+
             // First check if we have a full path here
             yield return path;
             // TODO: Add more (GAC?, configured by CLI?)
@@ -273,12 +283,22 @@ namespace AIT.Tools.VisualStudioTextTransform
 
             switch (processorName.ToUpperInvariant())
             {
+                case "T4TOOLBOX.TRANSFORMATIONCONTEXTPROCESSOR"://"T4Toolbox.TransformationContextProcessor".ToUpperInvariant():
+                {
+                    //var tn = "T4Toolbox.DirectiveProcessors.TransformationContextProcessor";
+                    //Type t = TextTemplateHostSettings.Default.GetType(tn);
+                    Type t = typeof(T4Toolbox.DirectiveProcessors.TransformationContextProcessor);
+                    if (t != null) { return t; }
+                    throw new ArgumentException(Resources.VisualStudioTextTemplateHost_ResolveDirectiveProcessor_Processor_Directive_is_unknown_);
+                }
                 default:
                 {
                     throw new ArgumentException(Resources.VisualStudioTextTemplateHost_ResolveDirectiveProcessor_Processor_Directive_is_unknown_);
                 }
             }
         }
+
+
         /// <summary>
         /// A directive processor can call this method if a file name does not 
         /// have a path.
@@ -384,8 +404,104 @@ namespace AIT.Tools.VisualStudioTextTransform
                 Source.TraceEvent(TraceEventType.Verbose, 0, Resources.VisualStudioTextTemplateHost_GetService_Returning_DTE_instance_);
                 return _dte;
             }
-
+            // ///////////////////////////////////
+            if (serviceType == typeof(T4Toolbox.ITransformationContextProvider))//TextTemplateHostSettings.Default.GetType("T4Toolbox.ITransformationContextProvider"))
+            {
+                var serviceImplType = typeof(T4Toolbox.VisualStudio.ScriptFileGenerator).Assembly
+                    .GetType("T4Toolbox.VisualStudio.TransformationContextProvider");
+                ConstructorInfo ctr = serviceImplType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public, null, new Type[] { typeof(IServiceProvider) }, new ParameterModifier[0]);
+                return ctr.Invoke(new object[] { this });
+                //Type t4packType = typeof(T4Toolbox.VisualStudio.T4ToolboxPackage);
+                //var container = (System.ComponentModel.Design.IServiceContainer)Activator.CreateInstance(t4packType);
+                //MethodInfo initMethod = t4packType.GetMethod("Initialize", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                //using ((IDisposable)container)
+                //{
+                //    initMethod.Invoke(container, new object[0]);
+                //    var service = container.GetService(serviceType);
+                //    return serviceType;
+                //}
+            }
+            if (serviceType == typeof(STextTemplating))
+            {
+                return this;
+            }
+            // ///////////////////////////////////
             return null;
         }
+
+        #region Implements ITextTemplatingComponents
+
+        private TextTemplatingCallback _textTemplatingCallback;
+
+        ITextTemplatingCallback ITextTemplatingComponents.Callback
+        {
+            get
+            {
+                if (_textTemplatingCallback == null)
+                {
+                    var callback = new TextTemplatingCallback();
+                    callback.Initialize();
+                    if (this._outputEncoding != null)
+                    {
+                        callback.OutputEncoding = this._outputEncoding;                    
+                    }
+                    else 
+                    {
+                        callback.SetOutputEncoding(Encoding.UTF8, false);
+                    }
+                    _textTemplatingCallback = callback;
+                }
+                return _textTemplatingCallback;
+            }
+            set
+            {
+                _textTemplatingCallback = (TextTemplatingCallback)value;
+            }
+        }
+
+        ITextTemplatingEngine ITextTemplatingComponents.Engine
+        {
+            get 
+            {
+                return this.Engine;    
+            }
+        }
+
+        private static VsHierarchyLite _vsHierarchyLite = new VsHierarchyLite();
+
+        object ITextTemplatingComponents.Hierarchy
+        {
+            get
+            {
+                return _vsHierarchyLite;
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        ITextTemplatingEngineHost ITextTemplatingComponents.Host
+        {
+            get 
+            {
+                return this;
+            }
+        }
+
+        string ITextTemplatingComponents.InputFile
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+        
+        #endregion
+
     }
 }
