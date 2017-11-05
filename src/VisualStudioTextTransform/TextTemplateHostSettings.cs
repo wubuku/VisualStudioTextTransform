@@ -38,8 +38,9 @@ namespace AIT.Tools.VisualStudioTextTransform
             get 
             {
                 return new string[] {
-                    @"C:\Users\yangjiefeng\AppData\Local\Microsoft\VisualStudio\12.0\Extensions\vb3egovy.yav\Include",
+                    //@"C:\Users\yangjiefeng\AppData\Local\Microsoft\VisualStudio\12.0\Extensions\vb3egovy.yav\Include",
                     //@"C:\Users\yangjiefeng\AppData\Local\Microsoft\VisualStudio\12.0\Extensions\vb3egovy.yav",
+                    System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 };
             }
         }

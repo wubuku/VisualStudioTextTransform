@@ -152,6 +152,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="T4Toolbox.tt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="transformT4TemplatesKeyfile.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -197,6 +200,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(SolutionDir)\..\packages\AIT.Build\content\build.targets" />
   <Import Project="$(CSharpTargetsPath)" Condition="Exists('$(CSharpTargetsPath)')" />
