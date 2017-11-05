@@ -140,6 +140,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="TextTemplatingCallbackLite.cs" />
+    <Compile Include="TransformationContextProvider.cs" />
     <Compile Include="VsHierarchyLite.cs" />
   </ItemGroup>
   <ItemGroup>

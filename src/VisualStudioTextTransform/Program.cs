@@ -23,7 +23,10 @@ namespace AIT.Tools.VisualStudioTextTransform
             //System.Console.WriteLine(typeof(Uri).Assembly.Location); Console.ReadKey(); return 0;
             try
             {
-                return ExecuteMain(arguments);
+                var result = ExecuteMain(arguments);
+                //System.Threading.Thread.Sleep(10 * 1000);
+                return result;
+
             }
             catch (Exception e)
             {

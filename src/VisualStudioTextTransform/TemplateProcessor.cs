@@ -75,10 +75,13 @@ namespace AIT.Tools.VisualStudioTextTransform
                     
                     var host = new VisualStudioTextTemplateHost(templateFileName, dte, resolver);
                     var engine = new Engine();
+                    // ////////////////////////
+                    host.Engine = engine;
+                    // ////////////////////////
                     var input = File.ReadAllText(templateFileName);
                     var output = engine.ProcessTemplate(input, host);
                     // ////////////////////////
-                    host.Engine = engine;
+                    //host.UpdateOutputFiles();
                     // ////////////////////////
                     return Tuple.Create(output, host);
                 }

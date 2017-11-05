@@ -8,6 +8,18 @@ namespace AIT.Tools.VisualStudioTextTransform
 {
     public class VsHierarchyLite : IVsHierarchy, IVsBuildPropertyStorage
     {
+        private readonly IVariableResolver _resolver;
+
+        public VsHierarchyLite()
+            : this(null)
+        { 
+        }
+
+        public VsHierarchyLite(IVariableResolver resolver)
+        {
+            _resolver = resolver;
+        }
+
         public int AdviseHierarchyEvents(IVsHierarchyEvents pEventSink, out uint pdwCookie)
         {
             throw new NotImplementedException();
@@ -116,6 +128,11 @@ namespace AIT.Tools.VisualStudioTextTransform
 
         int IVsBuildPropertyStorage.GetPropertyValue(string pszPropName, string pszConfigName, uint storage, out string pbstrPropValue)
         {
+            if (pszPropName.Equals("MSBuildProjectFullPath", StringComparison.InvariantCultureIgnoreCase))
+            {
+                pbstrPropValue = this._resolver.ResolveVariable("ProjectDir").FirstOrDefault();
+                return 0;
+            }
             throw new NotImplementedException();
         }
 

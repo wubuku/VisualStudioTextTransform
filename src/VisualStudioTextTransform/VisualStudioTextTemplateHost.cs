@@ -407,19 +407,24 @@ namespace AIT.Tools.VisualStudioTextTransform
             // ///////////////////////////////////
             if (serviceType == typeof(T4Toolbox.ITransformationContextProvider))//TextTemplateHostSettings.Default.GetType("T4Toolbox.ITransformationContextProvider"))
             {
-                var serviceImplType = typeof(T4Toolbox.VisualStudio.ScriptFileGenerator).Assembly
-                    .GetType("T4Toolbox.VisualStudio.TransformationContextProvider");
-                ConstructorInfo ctr = serviceImplType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public, null, new Type[] { typeof(IServiceProvider) }, new ParameterModifier[0]);
-                return ctr.Invoke(new object[] { this });
-                //Type t4packType = typeof(T4Toolbox.VisualStudio.T4ToolboxPackage);
+                if (_transformationContextProvider == null)
+                {
+                    _transformationContextProvider = new TransformationContextProvider(this);
+                }
+                return _transformationContextProvider;
+                // -----------------------------------
+                //var serviceImplType = typeof(T4Toolbox.VisualStudio.ScriptFileGenerator).Assembly
+                //    .GetType("T4Toolbox.VisualStudio.TransformationContextProvider");
+                //ConstructorInfo ctr = serviceImplType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public, null, new Type[] { typeof(IServiceProvider) }, new ParameterModifier[0]);
+                //var _transformationContextProvider = (T4Toolbox.ITransformationContextProvider)ctr.Invoke(new object[] { this });
+                //return _transformationContextProvider;
+                // -------------------------------------
+                //Type t4packType = typeof(T4Toolbox.VisualStudio.ScriptFileGenerator).Assembly.GetType("T4Toolbox.VisualStudio.T4ToolboxPackage");
                 //var container = (System.ComponentModel.Design.IServiceContainer)Activator.CreateInstance(t4packType);
                 //MethodInfo initMethod = t4packType.GetMethod("Initialize", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                //using ((IDisposable)container)
-                //{
-                //    initMethod.Invoke(container, new object[0]);
-                //    var service = container.GetService(serviceType);
-                //    return serviceType;
-                //}
+                //initMethod.Invoke(container, new object[0]);
+                //var service = container.GetService(serviceType);
+                //return serviceType;
             }
             if (serviceType == typeof(STextTemplating))
             {
@@ -428,6 +433,8 @@ namespace AIT.Tools.VisualStudioTextTransform
             // ///////////////////////////////////
             return null;
         }
+
+        private T4Toolbox.ITransformationContextProvider _transformationContextProvider;
 
         #region Implements ITextTemplatingComponents
 
@@ -439,16 +446,7 @@ namespace AIT.Tools.VisualStudioTextTransform
             {
                 if (_textTemplatingCallback == null)
                 {
-                    var callback = new TextTemplatingCallback();
-                    callback.Initialize();
-                    if (this._outputEncoding != null)
-                    {
-                        callback.OutputEncoding = this._outputEncoding;                    
-                    }
-                    else 
-                    {
-                        callback.SetOutputEncoding(Encoding.UTF8, false);
-                    }
+                    var callback = CreateTextTemplatingCallback();
                     _textTemplatingCallback = callback;
                 }
                 return _textTemplatingCallback;
@@ -459,6 +457,25 @@ namespace AIT.Tools.VisualStudioTextTransform
             }
         }
 
+        private TextTemplatingCallback CreateTextTemplatingCallback()
+        {
+            var callback = new TextTemplatingCallback();
+            callback.Initialize();
+            if (this._outputEncoding != null)
+            {
+                callback.OutputEncoding = this._outputEncoding;
+            }
+            else
+            {
+                callback.SetOutputEncoding(Encoding.UTF8, false);
+            }
+            if (this._fileExtension != null)
+            {
+                callback.SetFileExtension(this._fileExtension);
+            }
+            return callback;
+        }
+
         ITextTemplatingEngine ITextTemplatingComponents.Engine
         {
             get 
@@ -467,12 +484,16 @@ namespace AIT.Tools.VisualStudioTextTransform
             }
         }
 
-        private static VsHierarchyLite _vsHierarchyLite = new VsHierarchyLite();
+        private VsHierarchyLite _vsHierarchyLite;
 
         object ITextTemplatingComponents.Hierarchy
         {
             get
             {
+                if (_vsHierarchyLite == null)
+                {
+                    _vsHierarchyLite = new VsHierarchyLite(this._resolver);
+                }
                 return _vsHierarchyLite;
             }
             set
