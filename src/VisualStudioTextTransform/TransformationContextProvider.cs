@@ -163,6 +163,7 @@ namespace AIT.Tools.VisualStudioTextTransform
             {
                 throw new NullReferenceException("ProjectDirectory");
             }
+            bool isFirstFile = true;
             foreach(var outputFile in outputFiles)
             {
                 var includedFile = GetIncludedFileName(templateFile, outputFile);
@@ -173,8 +174,13 @@ namespace AIT.Tools.VisualStudioTextTransform
                 }
                 else
                 {
+                    if (isFirstFile && IsTxtFile(outputFile))
+                    {
+                        continue;
+                    }
                     Dddml.T4.ProjectTools.MSBuildProjectFileUtils.IncludeContentIfNotIncluded(ProjectFullPath, includedFile, dependentUpon);
                 }
+                isFirstFile = false;
             }
         }
 
@@ -198,6 +204,20 @@ namespace AIT.Tools.VisualStudioTextTransform
                 path = path.Substring(1);
             }
             return path;
+        }
+
+        private static bool IsTxtFile(string filename)
+        {
+            var idx = filename.LastIndexOf(".");
+            if (idx >= 0)
+            {
+                var ext = filename.Substring(idx + 1).ToLowerInvariant();
+                if (ext == "txt")
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static bool IsCompileFile(string filename)
