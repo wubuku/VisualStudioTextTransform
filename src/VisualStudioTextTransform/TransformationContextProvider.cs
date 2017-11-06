@@ -18,6 +18,7 @@ namespace AIT.Tools.VisualStudioTextTransform
     using System.Reflection;
     using System.Diagnostics;
     using System.Collections.Generic;
+    using Dddml.T4.ProjectTools;
 
     internal class TransformationContextProvider : MarshalByRefObject, ITransformationContextProvider
     {
@@ -121,7 +122,7 @@ namespace AIT.Tools.VisualStudioTextTransform
             InvokeOutputFileManagerDoWork(manager);
             
             // //////////////////
-            AddItemsToProject(inputFile, outputFiles.Select(f => f.File));
+            AddItemsToProject(inputFile, outputFiles);
             // //////////////////
 
             //    // Wait for the default output file to be generated
@@ -156,9 +157,9 @@ namespace AIT.Tools.VisualStudioTextTransform
             get {return Path.GetDirectoryName(ProjectFullPath);}
         }
 
-        private void AddItemsToProject(string templateFile, IEnumerable<string> outputFiles)
+        private void AddItemsToProject(string templateFileName, OutputFile[] outputFiles)
         {
-            Debug.Assert(templateFile.StartsWith(ProjectDirectory, StringComparison.OrdinalIgnoreCase), "Template file-name is not within the project directory.");
+            Debug.Assert(templateFileName.StartsWith(ProjectDirectory, StringComparison.OrdinalIgnoreCase), "Template file-name is not within the project directory.");
             if (String.IsNullOrWhiteSpace(ProjectDirectory))
             {
                 throw new NullReferenceException("ProjectDirectory");
@@ -166,20 +167,31 @@ namespace AIT.Tools.VisualStudioTextTransform
             bool isFirstFile = true;
             foreach(var outputFile in outputFiles)
             {
-                var includedFile = GetIncludedFileName(templateFile, outputFile);
-                var dependentUpon = GetDependentUponTemplateFileName(templateFile);
-                if (IsCompileFile(outputFile))
+                var outputFileName = outputFile.File;
+                var includedFileName = GetIncludedFileName(templateFileName, outputFileName);
+                var dependentUponFileName = GetDependentUponTemplateFileName(templateFileName);
+                if (String.Equals(outputFile.ItemType, "EmbeddedResource", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Dddml.T4.ProjectTools.MSBuildProjectFileUtils.IncludeCompileIfNotIncluded(ProjectFullPath, includedFile, dependentUpon);
+                    MSBuildProjectFileUtils.IncludeEmbeddedResourceIfNotIncluded(ProjectFullPath, includedFileName, dependentUponFileName);
                 }
                 else
                 {
-                    if (isFirstFile && IsTxtFile(outputFile))
+                    if (IsCompileFile(outputFileName))
                     {
-                        continue;
+                        MSBuildProjectFileUtils.IncludeCompileIfNotIncluded(ProjectFullPath, includedFileName, dependentUponFileName);
                     }
-                    Dddml.T4.ProjectTools.MSBuildProjectFileUtils.IncludeContentIfNotIncluded(ProjectFullPath, includedFile, dependentUpon);
+                    else
+                    {
+                        if (isFirstFile && IsTxtFile(outputFileName))
+                        {
+                            continue;
+                        }
+                        MSBuildProjectFileUtils.IncludeContentIfNotIncluded(ProjectFullPath, includedFileName, dependentUponFileName);
+                    }
+
                 }
+
+                // /////////////////
                 isFirstFile = false;
             }
         }

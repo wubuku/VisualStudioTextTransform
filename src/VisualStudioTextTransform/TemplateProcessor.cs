@@ -153,7 +153,25 @@ namespace AIT.Tools.VisualStudioTextTransform
                 File.Delete(outFilePath);
             }
             File.WriteAllText(outFilePath, output, host.FileEncoding);
-            return host.Errors;
+            // //////////////////////
+            var filteredErrors = GetFilteredHostErrors(host);
+            return filteredErrors;
+        }
+
+        private static CompilerErrorCollection GetFilteredHostErrors(VisualStudioTextTemplateHost host)
+        {
+            var filteredErrors = new CompilerErrorCollection();
+            if (host.Errors != null)
+            {
+                for (int i = 0; i < host.Errors.Count; i++)
+                {
+                    if (!host.Errors[i].IsWarning)
+                    {
+                        filteredErrors.Add(host.Errors[i]);
+                    }
+                }
+            }
+            return filteredErrors;
         }
 
         private static IEnumerable<string> FindTemplates(string p)
