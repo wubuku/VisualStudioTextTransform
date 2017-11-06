@@ -35,6 +35,8 @@ namespace AIT.Tools.VisualStudioTextTransform
 
         public ITextTemplatingEngine Engine { get; set; }
 
+        internal string ProjectFullPath { get; set; }
+
         /// <summary>
         /// /
         /// </summary>
@@ -409,7 +411,9 @@ namespace AIT.Tools.VisualStudioTextTransform
             {
                 if (_transformationContextProvider == null)
                 {
-                    _transformationContextProvider = new TransformationContextProvider(this);
+                    var cp = new TransformationContextProvider(this);
+                    cp.ProjectFullPath = this.ProjectFullPath;
+                    _transformationContextProvider = cp;
                 }
                 return _transformationContextProvider;
                 // -----------------------------------

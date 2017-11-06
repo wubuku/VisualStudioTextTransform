@@ -76,6 +76,7 @@ namespace AIT.Tools.VisualStudioTextTransform
                     var host = new VisualStudioTextTemplateHost(templateFileName, dte, resolver);
                     var engine = new Engine();
                     // ////////////////////////
+                    host.ProjectFullPath = project.FullName;
                     host.Engine = engine;
                     // ////////////////////////
                     var input = File.ReadAllText(templateFileName);

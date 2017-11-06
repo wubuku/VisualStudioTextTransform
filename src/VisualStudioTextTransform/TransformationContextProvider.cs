@@ -1,9 +1,8 @@
-﻿
+﻿// 
+// FROM: namespace T4Toolbox.VisualStudio.TransformationContextProvider
+//
 namespace AIT.Tools.VisualStudioTextTransform
 {
-    // 
-    // FROM: namespace T4Toolbox.VisualStudio
-    //
     // <copyright file="TransformationContextProvider.cs" company="Oleg Sych">
     //  Copyright © Oleg Sych. All Rights Reserved.
     // </copyright>
@@ -17,6 +16,8 @@ namespace AIT.Tools.VisualStudioTextTransform
     using Microsoft.VisualStudio.TextTemplating.VSHost;
     using T4Toolbox;
     using System.Reflection;
+    using System.Diagnostics;
+    using System.Collections.Generic;
 
     internal class TransformationContextProvider : MarshalByRefObject, ITransformationContextProvider
     {
@@ -118,30 +119,99 @@ namespace AIT.Tools.VisualStudioTextTransform
             InvokeOutputFileManagerValidate(manager);
 
             InvokeOutputFileManagerDoWork(manager);
-        
-        //    // Wait for the default output file to be generated
-        //    var watcher = new FileSystemWatcher();
-        //    watcher.Path = Path.GetDirectoryName(inputFile);
-        //    watcher.Filter = Path.GetFileNameWithoutExtension(inputFile) + "*." + this.GetTransformationOutputExtensionFromHost();
+            
+            // //////////////////
+            AddItemsToProject(inputFile, outputFiles.Select(f => f.File));
+            // //////////////////
 
-        //    FileSystemEventHandler runManager = (sender, args) =>
-        //    {
-        //        watcher.Dispose();
+            //    // Wait for the default output file to be generated
+            //    var watcher = new FileSystemWatcher();
+            //    watcher.Path = Path.GetDirectoryName(inputFile);
+            //    watcher.Filter = Path.GetFileNameWithoutExtension(inputFile) + "*." + this.GetTransformationOutputExtensionFromHost();
 
-        //        // Store the actual output file name
-        //        OutputFile defaultOutput = outputFiles.FirstOrDefault(output => string.IsNullOrEmpty(output.File));
-        //        if (defaultOutput != null)
-        //        {
-        //            defaultOutput.File = Path.GetFileName(args.FullPath);
-        //        }
+            //    FileSystemEventHandler runManager = (sender, args) =>
+            //    {
+            //        watcher.Dispose();
 
-        //        // Finish updating the output files on the UI thread
-        //        ThreadHelper.Generic.BeginInvoke(manager.DoWork);
-        //    };
+            //        // Store the actual output file name
+            //        OutputFile defaultOutput = outputFiles.FirstOrDefault(output => string.IsNullOrEmpty(output.File));
+            //        if (defaultOutput != null)
+            //        {
+            //            defaultOutput.File = Path.GetFileName(args.FullPath);
+            //        }
 
-        //    watcher.Created += runManager;
-        //    watcher.Changed += runManager;
-        //    watcher.EnableRaisingEvents = true;
+            //        // Finish updating the output files on the UI thread
+            //        ThreadHelper.Generic.BeginInvoke(manager.DoWork);
+            //    };
+
+            //    watcher.Created += runManager;
+            //    watcher.Changed += runManager;
+            //    watcher.EnableRaisingEvents = true;
+        }
+
+        internal string ProjectFullPath { get; set; }
+
+        internal string ProjectDirectory
+        {
+            get {return Path.GetDirectoryName(ProjectFullPath);}
+        }
+
+        private void AddItemsToProject(string templateFile, IEnumerable<string> outputFiles)
+        {
+            Debug.Assert(templateFile.StartsWith(ProjectDirectory, StringComparison.OrdinalIgnoreCase), "Template file-name is not within the project directory.");
+            if (String.IsNullOrWhiteSpace(ProjectDirectory))
+            {
+                throw new NullReferenceException("ProjectDirectory");
+            }
+            foreach(var outputFile in outputFiles)
+            {
+                var includedFile = GetIncludedFileName(templateFile, outputFile);
+                var dependentUpon = GetDependentUponTemplateFileName(templateFile);
+                if (IsCompileFile(outputFile))
+                {
+                    Dddml.T4.ProjectTools.MSBuildProjectFileUtils.IncludeCompileIfNotIncluded(ProjectFullPath, includedFile, dependentUpon);
+                }
+                else
+                {
+                    Dddml.T4.ProjectTools.MSBuildProjectFileUtils.IncludeContentIfNotIncluded(ProjectFullPath, includedFile, dependentUpon);
+                }
+            }
+        }
+
+        private string GetDependentUponTemplateFileName(string templateFile)
+        {
+            var templateFileRelativePath = templateFile.Substring(ProjectDirectory.Length);
+            return TrimDirectorySeparatorChar(templateFileRelativePath);
+        }
+
+        private string GetIncludedFileName(string templateFile, string outputFile)
+        {
+            var templateFileRelativePath = templateFile.Substring(ProjectDirectory.Length);
+            var templateFileRelativeDir = TrimDirectorySeparatorChar(Path.GetDirectoryName(templateFileRelativePath));
+            return Path.Combine(templateFileRelativeDir, outputFile);
+        }
+
+        private static string TrimDirectorySeparatorChar(string path)
+        {
+            if (path.StartsWith(Path.DirectorySeparatorChar.ToString()))
+            {
+                path = path.Substring(1);
+            }
+            return path;
+        }
+
+        private static bool IsCompileFile(string filename)
+        {
+            var idx = filename.LastIndexOf(".");
+            if (idx >= 0)
+            {
+                var ext = filename.Substring(idx + 1).ToLowerInvariant();
+                if (ext == "vb" || ext == "cs" || ext == "java")
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void InvokeOutputFileManagerDoWork(object manager)
