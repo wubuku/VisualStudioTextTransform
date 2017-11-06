@@ -182,15 +182,13 @@ namespace AIT.Tools.VisualStudioTextTransform
                     }
                     else
                     {
-                        if (isFirstFile && IsTxtFile(outputFileName))
+                        if (isFirstFile && IsTxtFile(outputFileName) && outputFiles.Length > 1)
                         {
                             continue;
                         }
                         MSBuildProjectFileUtils.IncludeContentIfNotIncluded(ProjectFullPath, includedFileName, dependentUponFileName);
                     }
-
                 }
-
                 // /////////////////
                 isFirstFile = false;
             }
