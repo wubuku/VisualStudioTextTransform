@@ -236,7 +236,7 @@ namespace AIT.Tools.VisualStudioTextTransform
             if (idx >= 0)
             {
                 var ext = filename.Substring(idx + 1).ToLowerInvariant();
-                if (ext == "vb" || ext == "cs" || ext == "java")
+                if (ext == "vb" || ext == "cs")// || ext == "java"
                 {
                     return true;
                 }
