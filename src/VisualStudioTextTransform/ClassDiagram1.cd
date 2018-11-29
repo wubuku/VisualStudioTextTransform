@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AIT.Tools.VisualStudioTextTransform.CombiningVariableResolver" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>CombiningVariableResolver.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.MessageFilter" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAEACAAAAgAAAAAAQAAAAAAQQAAAAAAAAEAAAA=</HashCode>
+      <FileName>ComHelpers.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.DefaultVariableResolver" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAgAQAAAAAAAAAAEAAAAABAAQIAAAAAQAAQAAAAAgE=</HashCode>
+      <FileName>DefaultVariableResolver.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.DteHelper" Collapsed="true">
+    <Position X="4.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgCAAAAAAQAAAAAAAAAAAAAAAAAAAABAAIA=</HashCode>
+      <FileName>DteHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.LogicalCallContextChange" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="1.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAACAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LogicalCallContextChange.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.NativeMethods" Collapsed="true">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAEAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>NativeMethods.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.Options" Collapsed="true">
+    <Position X="5.5" Y="4.5" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Options.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.Program" Collapsed="true">
+    <Position X="4" Y="4.5" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.TemplateNotPartOfSolutionException" Collapsed="true">
+    <Position X="5.75" Y="3.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TemplateNotPartOfSolutionException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.TemplateProcessor" Collapsed="true">
+    <Position X="7" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAgAAAgAAAAAAAAAgABAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>TemplateProcessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.TextTemplateHostSettings" Collapsed="true">
+    <Position X="6.5" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TextTemplateHostSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.TextTemplatingCallbackLite" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="3.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAAAABAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TextTemplatingCallbackLite.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.TransformationContextProvider" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2" Y="2.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAIIAABBAUAAhgAAAIAFACAACAAAAAEAAAA=</HashCode>
+      <FileName>TransformationContextProvider.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.VisualStudioTextTemplateHost" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="3.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAhwAEQIBhBYEQHEQCAACJAAIFAEEECKBAEAQBACCkA=</HashCode>
+      <FileName>VisualStudioTextTemplateHost.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.VsHierarchyLite" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ECAAgAAAAgAAAAGAAKAIAAAAwKMACACAMAANAACAEAA=</HashCode>
+      <FileName>VsHierarchyLite.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Dddml.T4.ProjectTools.MSBuildProjectFileUtils" Collapsed="true">
+    <Position X="2.5" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAApAAAAACAAAAQAAAAAAAAAAQKAQCAAgAgA=</HashCode>
+      <FileName>C:\Users\yangjiefeng\Documents\GitHub\dddml-dotnet-tools\Dddml.T4.ProjectTools\MSBuildProjectFileUtils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.AssemblyVersionInformation" Collapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\yangjiefeng\Documents\GitHub\VisualStudioTextTransform\src\GlobalAssemblyInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.Properties.Resources" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>gAAACAACQQAAABEQAAYRECQIAQBAiAAAEQAAAAAABIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AIT.Tools.VisualStudioTextTransform.Properties.Settings" Collapsed="true">
+    <Position X="2.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgEAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="AIT.Tools.VisualStudioTextTransform.IVariableResolver" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>IVariableResolver.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>
