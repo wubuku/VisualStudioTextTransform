@@ -30,11 +30,39 @@ namespace AIT.Tools.VisualStudioTextTransform
         {
             if (args.RemovedReason != CacheEntryRemovedReason.Expired) return;
 
-            var val = (Tuple<string, string, FileSystemEventArgs>)args.CacheItem.Value;
-
-            UpdateAggregate(val.Item1, val.Item2);
-
+            var val = (Tuple<string, string, Options, FileSystemEventArgs>)args.CacheItem.Value;
             //Console.WriteLine($"Let's now respond to the event {e.ChangeType} on {e.FullPath}");
+            string solutionFileName = val.Item1;
+            string aggregateName = val.Item2;
+            Options options = val.Item3;
+            FileSystemEventArgs e = val.Item4;
+            if (e.ChangeType == WatcherChangeTypes.Changed)
+            {
+                if (options != null && options.ConfigFile != null)
+                {
+                    UpdateAggregateScripts(options);
+                }
+                UpdateAggregate(solutionFileName, aggregateName);
+            }
+            else if (e.ChangeType == WatcherChangeTypes.Created || e.ChangeType == WatcherChangeTypes.Deleted)
+            {
+                if (options != null && options.ConfigFile != null)
+                {
+                    UpdateAggregateScripts(options);
+                    UpdateAggregate(solutionFileName, aggregateName);
+                }
+            }
+
+        }
+
+        private static void UpdateAggregateScripts(Options options)
+        {
+            var configFile = options.ConfigFile;
+            Process p = new Process();
+            //todo
+            p.StartInfo.FileName = @"C:\Users\yangjiefeng\Documents\GitHub\dddml-dotnet-tools\Dddml.T4.ProjectTools\bin\Debug\Dddml.T4.ProjectTools.exe";
+            p.StartInfo.Arguments = String.Format(" {0} -u A", configFile);
+            SetAndStartProcess(p);
         }
 
         //// Add file event to cache (won't add if already there so assured of only one occurance)
@@ -53,26 +81,40 @@ namespace AIT.Tools.VisualStudioTextTransform
         /// <param name="e"></param>
         public void OnChanged(string solutionFileName, Options options, object source, FileSystemEventArgs e)
         {
+            var aggregateName = GetAggregateName(e);
+            MemCacheAdd(solutionFileName, aggregateName, options, e);
+        }
+
+
+        public void OnCreated(string solutionFileName, Options options, object source, FileSystemEventArgs e)
+        {
+            var aggregateName = GetAggregateName(e);
+            MemCacheAdd(solutionFileName, aggregateName, options, e);
+        }
+
+        public void OnDeleted(string solutionFileName, Options options, object source, FileSystemEventArgs e)
+        {
+            var aggregateName = GetAggregateName(e);
+            MemCacheAdd(solutionFileName, aggregateName, options, e);
+        }
+
+        public void OnRenamed(string solutionFileName, Options options, object source, RenamedEventArgs e)
+        {
+        }
+
+        private void MemCacheAdd(string solutionFileName, string aggregateName, Options options, FileSystemEventArgs e)
+        {
+            var val = new Tuple<string, string, Options, FileSystemEventArgs>(solutionFileName, aggregateName, options, e);
+            _cacheItemPolicy.AbsoluteExpiration = DateTimeOffset.Now.AddMilliseconds(CacheTimeMilliseconds);
+            _memCache.AddOrGetExisting(e.Name, val, _cacheItemPolicy);
+        }
+
+        private static string GetAggregateName(FileSystemEventArgs e)
+        {
             var fp = e.FullPath;
             var fn = Path.GetFileName(fp);
             var aggregateName = fn.Substring(0, fn.LastIndexOf("."));
-
-            var val = new Tuple<string, string, FileSystemEventArgs>(solutionFileName, aggregateName, e);
-            _cacheItemPolicy.AbsoluteExpiration = DateTimeOffset.Now.AddMilliseconds(CacheTimeMilliseconds);
-            _memCache.AddOrGetExisting(e.Name, val, _cacheItemPolicy);
-
-        }
-
-        public void OnCreated(object source, FileSystemEventArgs e)
-        {
-        }
-
-        public void OnDeleted(object source, FileSystemEventArgs e)
-        {
-        }
-
-        public void OnRenamed(object source, RenamedEventArgs e)
-        {
+            return aggregateName;
         }
 
         private static void UpdateAggregate(string solutionFileName, string aggregateName)
@@ -80,6 +122,11 @@ namespace AIT.Tools.VisualStudioTextTransform
             Process p = new Process();
             p.StartInfo.FileName = typeof(Program).Assembly.Location;//"VisualStudioTextTransform.exe";
             p.StartInfo.Arguments = String.Format(" {0} -a {1}", solutionFileName, aggregateName);
+            SetAndStartProcess(p);
+        }
+
+        private static void SetAndStartProcess(Process p)
+        {
             p.StartInfo.RedirectStandardInput = true;
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;

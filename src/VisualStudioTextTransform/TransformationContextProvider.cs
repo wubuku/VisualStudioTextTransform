@@ -123,6 +123,7 @@ namespace AIT.Tools.VisualStudioTextTransform
             
             // //////////////////
             AddItemsToProject(inputFile, outputFiles);
+            var removedFileNames = RemoveNotGeneratedItemsFromProject(inputFile, outputFiles);   
             // //////////////////
 
             //    // Wait for the default output file to be generated
@@ -148,6 +149,33 @@ namespace AIT.Tools.VisualStudioTextTransform
             //    watcher.Created += runManager;
             //    watcher.Changed += runManager;
             //    watcher.EnableRaisingEvents = true;
+        }
+
+        private IList<string> RemoveNotGeneratedItemsFromProject(string templateFileName, OutputFile[] outputFiles)
+        {
+            Debug.Assert(templateFileName.StartsWith(ProjectDirectory, StringComparison.OrdinalIgnoreCase), "Template file-name is not within the project directory.");
+            if (String.IsNullOrWhiteSpace(ProjectDirectory))
+            {
+                throw new NullReferenceException("ProjectDirectory");
+            }
+            var excludedFileNames = new List<string>();
+            foreach (var outputFile in outputFiles)
+            {
+                var outputFileName = outputFile.File;
+                var includedFileName = GetIncludedFileName(templateFileName, outputFileName);
+                excludedFileNames.Add(includedFileName);
+            }
+            var dependentUponFileName = GetDependentUponTemplateFileName(templateFileName);
+            var removedFileNames = MSBuildProjectFileUtils.RemoveItemsDependentUpon(ProjectFullPath, dependentUponFileName, excludedFileNames);
+            foreach (var fn in removedFileNames)
+            {
+                var fp = Path.Combine(ProjectDirectory, fn);
+                if (File.Exists(fp))
+                {
+                    File.Delete(fp);
+                }
+            }
+            return removedFileNames;
         }
 
         internal string ProjectFullPath { get; set; }

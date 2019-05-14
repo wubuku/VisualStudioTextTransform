@@ -22,6 +22,17 @@ namespace AIT.Tools.VisualStudioTextTransform
         [STAThread]
         public static int Main(string[] arguments)
         {
+            // ////////////////////////
+            //"C:\Users\yangjiefeng\Documents\coding.net\pmall\pmall.net.sln" -w "C:\Users\yangjiefeng\Documents\coding.net\pmall\dddml" -c "C:\Users\yangjiefeng\Documents\coding.net\pmall\docs\drafts\proj-creation-config.json"
+            //arguments = new string[] {
+            //    @"C:\Users\yangjiefeng\Documents\coding.net\pmall\pmall.net.sln",
+            //    //"-w",
+            //    //@"C:\Users\yangjiefeng\Documents\coding.net\pmall\dddml",
+            //    //"-c",
+            //    //@"C:\Users\yangjiefeng\Documents\coding.net\pmall\docs\drafts\proj-creation-config.json",
+            //    "-a", "Empty"
+            //};
+            // ////////////////////////
             //System.Console.WriteLine(typeof(Uri).Assembly.Location); Console.ReadKey(); return 0;
             try
             {
@@ -65,8 +76,8 @@ namespace AIT.Tools.VisualStudioTextTransform
                 watcher.Filter = "*.yaml";
                 // Add event handlers.              
                 watcher.Changed += new FileSystemEventHandler((s, e) => fileSystemWatcherHandler.OnChanged(solutionFileName, options, s, e));
-                //watcher.Created += new FileSystemEventHandler(OnCreated);
-                //watcher.Deleted += new FileSystemEventHandler(OnChanged);
+                watcher.Created += new FileSystemEventHandler((s, e) => fileSystemWatcherHandler.OnCreated(solutionFileName, options, s, e));
+                watcher.Deleted += new FileSystemEventHandler((s, e) => fileSystemWatcherHandler.OnDeleted(solutionFileName, options, s, e));
                 //watcher.Renamed += new RenamedEventHandler(OnChanged);
                 // Begin watching.
                 watcher.EnableRaisingEvents = true;

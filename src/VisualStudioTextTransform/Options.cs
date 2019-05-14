@@ -28,7 +28,7 @@ namespace AIT.Tools.VisualStudioTextTransform
         }
 
         /// <summary>
-        /// Watch Dir.
+        /// Aggregate to update.
         /// </summary>
         [Option('a', "aggregatename", DefaultValue = null, Required = false, HelpText = "Aggregate name.")]
         public string AggregateName
@@ -36,6 +36,17 @@ namespace AIT.Tools.VisualStudioTextTransform
             get;
             set;
         }
+
+        /// <summary>
+        /// Config file.
+        /// </summary>
+        [Option('c', "configfile", DefaultValue = null, Required = false, HelpText = "Config file.")]
+        public string ConfigFile
+        {
+            get;
+            set;
+        }
+
 
 
     }
