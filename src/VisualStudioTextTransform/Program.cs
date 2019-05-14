@@ -1,7 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using AIT.Tools.VisualStudioTextTransform.Properties;
+﻿using AIT.Tools.VisualStudioTextTransform.Properties;
 using CommandLine;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace AIT.Tools.VisualStudioTextTransform
 {
@@ -35,6 +37,8 @@ namespace AIT.Tools.VisualStudioTextTransform
             }
         }
 
+
+
         private static int ExecuteMain(string[] arguments)
         {
             if (arguments.Length == 0)
@@ -42,16 +46,75 @@ namespace AIT.Tools.VisualStudioTextTransform
                 throw new ArgumentException(Resources.Program_Main_you_must_provide_a_solution_file);
             }
             var solutionFileName = arguments[0];
+
             var opts = new string[arguments.Length - 1];
             Array.Copy(arguments, 1, opts, 0, arguments.Length - 1);
             var options = new Options();
             Parser.Default.ParseArguments(opts, options);
 
+            if (options.WatchtDir != null)
+            {
+                FileSystemWatcherHandler fileSystemWatcherHandler = new FileSystemWatcherHandler();
+
+                FileSystemWatcher watcher = new FileSystemWatcher();
+                watcher.Path = options.WatchtDir;//@"d:DownLoads";//args[1];
+
+                watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+                // Only watch text files.
+                watcher.Filter = "*.yaml";
+                // Add event handlers.              
+                watcher.Changed += new FileSystemEventHandler((s, e) => fileSystemWatcherHandler.OnChanged(solutionFileName, options, s, e));
+                //watcher.Created += new FileSystemEventHandler(OnCreated);
+                //watcher.Deleted += new FileSystemEventHandler(OnChanged);
+                //watcher.Renamed += new RenamedEventHandler(OnChanged);
+                // Begin watching.
+                watcher.EnableRaisingEvents = true;
+                // ////////////////////////////////////////////////////
+                while (true)
+                {
+                    var k = System.Console.ReadLine();
+                    if (k != null && k.Trim().Equals("exit", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        return 0;
+                    }
+                }
+            }
+
             var result =
-                TemplateProcessor.ProcessSolution(solutionFileName, options) ? 0 : 1;
-            System.Console.ReadKey();
+                TemplateProcessor.ProcessSolution(solutionFileName, options, GetFileNamePatterns(options.AggregateName)) ? 0 : 1;
+            //System.Console.ReadKey();
             return result;
         }
+
+
+        //private static void UpdateAggregate(string solutionFileName, Options options, string aggregateName)
+        //{
+        //    var patterns = GetFileNamePatterns(aggregateName);
+        //    TemplateProcessor.ProcessSolution(solutionFileName, options, patterns);
+        //}
+
+        private static Regex[] GetFileNamePatterns(string aggregateName)
+        {
+            if (String.IsNullOrWhiteSpace(aggregateName))
+            {
+                return null;
+            }
+            //GenerateXxxxDomain 开头的脚本；
+            //GenerateAggregatesHbm.tt 脚本重新生成 hbm 映射文件；
+            //GenerateAggregatesResources.tt 重新生成 RESTful API；
+            //GenerateBoundedContextMetadata.tt 更新元数据文件
+            //GenerateBoundedContextDomainAggregatesMetadata.tt 更新元数据文件
+            //GenerateAggregatesConfig.tt 更新配置文件
+            var patterns = new Regex[] {
+                new Regex(String.Format("Generate{0}Domain.*\\.tt", aggregateName)),
+                new Regex("GenerateAggregates.*\\.tt"),
+                new Regex("GenerateBoundedContext.*\\.tt"),
+            };
+            return patterns;
+        }
+
+     
 
     }
 }

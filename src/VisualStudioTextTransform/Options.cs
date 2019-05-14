@@ -17,6 +17,26 @@ namespace AIT.Tools.VisualStudioTextTransform
             set;
         }
 
+        /// <summary>
+        /// Watch Dir.
+        /// </summary>
+        [Option('w', "watchdir", DefaultValue = null, Required = false, HelpText = "Watch a directory.")]
+        public string WatchtDir
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Watch Dir.
+        /// </summary>
+        [Option('a', "aggregatename", DefaultValue = null, Required = false, HelpText = "Aggregate name.")]
+        public string AggregateName
+        {
+            get;
+            set;
+        }
+
 
     }
 }

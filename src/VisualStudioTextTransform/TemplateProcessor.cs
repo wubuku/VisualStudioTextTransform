@@ -9,6 +9,7 @@ using System.Threading;
 using AIT.Tools.VisualStudioTextTransform.Properties;
 using EnvDTE80;
 using Engine = Microsoft.VisualStudio.TextTemplating.Engine;
+using System.Text.RegularExpressions;
 
 namespace AIT.Tools.VisualStudioTextTransform
 {
@@ -192,7 +193,7 @@ namespace AIT.Tools.VisualStudioTextTransform
         /// <param name="solutionFileName"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public static bool ProcessSolution(string solutionFileName, Options options)
+        public static bool ProcessSolution(string solutionFileName, Options options, ICollection<Regex> fileNamePatterns = null)
         {
             if (string.IsNullOrEmpty(solutionFileName) || !File.Exists(solutionFileName))
             {
@@ -216,6 +217,7 @@ namespace AIT.Tools.VisualStudioTextTransform
                     Source.TraceEvent(TraceEventType.Verbose, 0, Resources.Program_Main_Finding_and_processing___tt_templates___);
                     var firstError =
                         FindTemplates(Path.GetDirectoryName(solutionFileName))
+                            .Where(t => MatchPatterns(t, fileNamePatterns))
                             .Select(t =>
                                     { 
                                         try
@@ -251,6 +253,25 @@ namespace AIT.Tools.VisualStudioTextTransform
                 }
             }
         }
+
+        private static bool MatchPatterns(string t, ICollection<Regex> fileNamePatterns)
+        {
+            if (fileNamePatterns == null)
+            {
+                return true;
+            }
+            var f = Path.GetFileName(t);
+            var rx = fileNamePatterns.FirstOrDefault(r => r.IsMatch(f));
+            if (rx != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
     
 }
