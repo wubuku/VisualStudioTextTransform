@@ -46,5 +46,18 @@ namespace AIT.Tools.VisualStudioTextTransform.Properties {
                 this["SelfHostVisualStudio"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\yangjiefeng\\Documents\\GitHub\\dddml-dotnet-tools\\Dddml.T4.ProjectTools\\bi" +
+            "n\\Debug\\Dddml.T4.ProjectTools.exe")]
+        public string ProjectToolsFileName {
+            get {
+                return ((string)(this["ProjectToolsFileName"]));
+            }
+            set {
+                this["ProjectToolsFileName"] = value;
+            }
+        }
     }
 }

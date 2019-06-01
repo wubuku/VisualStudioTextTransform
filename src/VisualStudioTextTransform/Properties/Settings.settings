@@ -8,5 +8,8 @@
     <Setting Name="SelfHostVisualStudio" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="ProjectToolsFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Users\yangjiefeng\Documents\GitHub\dddml-dotnet-tools\Dddml.T4.ProjectTools\bin\Debug\Dddml.T4.ProjectTools.exe</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

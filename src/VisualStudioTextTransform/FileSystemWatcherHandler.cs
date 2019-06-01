@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AIT.Tools.VisualStudioTextTransform.Properties;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -57,10 +58,14 @@ namespace AIT.Tools.VisualStudioTextTransform
 
         private static void UpdateAggregateScripts(Options options)
         {
+            var projToolFileName = Settings.Default.ProjectToolsFileName;
+            if (String.IsNullOrWhiteSpace(projToolFileName)) 
+            {
+                return; 
+            }
             var configFile = options.ConfigFile;
             Process p = new Process();
-            //todo
-            p.StartInfo.FileName = @"C:\Users\yangjiefeng\Documents\GitHub\dddml-dotnet-tools\Dddml.T4.ProjectTools\bin\Debug\Dddml.T4.ProjectTools.exe";
+            p.StartInfo.FileName = projToolFileName;
             p.StartInfo.Arguments = String.Format(" {0} -u A", configFile);
             SetAndStartProcess(p);
         }
