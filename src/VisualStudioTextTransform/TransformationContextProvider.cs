@@ -158,15 +158,15 @@ namespace AIT.Tools.VisualStudioTextTransform
             {
                 throw new NullReferenceException("ProjectDirectory");
             }
-            var excludedFileNames = new List<string>();
+            var includedFileNames = new List<string>();
             foreach (var outputFile in outputFiles)
             {
                 var outputFileName = outputFile.File;
                 var includedFileName = GetIncludedFileName(templateFileName, outputFileName);
-                excludedFileNames.Add(includedFileName);
+                includedFileNames.Add(includedFileName);
             }
             var dependentUponFileName = GetDependentUponTemplateFileName(templateFileName);
-            var removedFileNames = MSBuildProjectFileUtils.RemoveItemsDependentUpon(ProjectFullPath, dependentUponFileName, excludedFileNames);
+            var removedFileNames = MSBuildProjectFileUtils.RemoveItemsDependentUpon(ProjectFullPath, dependentUponFileName, includedFileNames);
             foreach (var fn in removedFileNames)
             {
                 var fp = Path.Combine(ProjectDirectory, fn);
