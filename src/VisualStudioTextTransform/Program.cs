@@ -121,6 +121,9 @@ namespace AIT.Tools.VisualStudioTextTransform
                 new Regex(String.Format("Generate{0}Domain.*\\.tt", aggregateName)),
                 new Regex("GenerateAggregates.*\\.tt"),
                 new Regex("GenerateBoundedContext.*\\.tt"),
+                new Regex(".*ForeignKeyConstraints\\.tt"),
+                new Regex(".*RViews\\.tt"),
+                new Regex(".*RViewNameConflictedTables\\.tt"),
             };
             return patterns;
         }
