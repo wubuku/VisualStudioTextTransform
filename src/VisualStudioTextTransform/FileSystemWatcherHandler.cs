@@ -61,7 +61,13 @@ namespace AIT.Tools.VisualStudioTextTransform
             var projToolFileName = Settings.Default.ProjectToolsFileName;
             if (String.IsNullOrWhiteSpace(projToolFileName)) 
             {
+                Console.WriteLine("ProjectToolsFileName is null!");
                 return; 
+            }
+            if (!File.Exists(projToolFileName))
+            {
+                Console.WriteLine("ProjectToolsFileName NOT Exists!");
+                return;
             }
             var configFile = options.ConfigFile;
             Process p = new Process();
