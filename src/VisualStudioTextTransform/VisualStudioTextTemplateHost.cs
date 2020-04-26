@@ -289,9 +289,10 @@ namespace AIT.Tools.VisualStudioTextTransform
                 {
                     //var tn = "T4Toolbox.DirectiveProcessors.TransformationContextProcessor";
                     //Type t = TextTemplateHostSettings.Default.GetType(tn);
+                    //if (t != null) { return t; }
+                    //throw new ArgumentException(Resources.VisualStudioTextTemplateHost_ResolveDirectiveProcessor_Processor_Directive_is_unknown_);
                     Type t = typeof(T4Toolbox.DirectiveProcessors.TransformationContextProcessor);
-                    if (t != null) { return t; }
-                    throw new ArgumentException(Resources.VisualStudioTextTemplateHost_ResolveDirectiveProcessor_Processor_Directive_is_unknown_);
+                    return t;
                 }
                 default:
                 {
