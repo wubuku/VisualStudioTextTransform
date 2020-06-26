@@ -22,8 +22,8 @@ namespace AIT.Tools.VisualStudioTextTransform
         [STAThread]
         public static int Main(string[] arguments)
         {
-            // ////////////////////////
             //"C:\Users\yangjiefeng\Documents\coding.net\pmall\pmall.net.sln" -w "C:\Users\yangjiefeng\Documents\coding.net\pmall\dddml" -c "C:\Users\yangjiefeng\Documents\coding.net\pmall\docs\drafts\proj-creation-config.json"
+            //// ////////////////////////
             //arguments = new string[] {
             //    @"C:\Users\yangjiefeng\Documents\coding.net\pmall\pmall.net.sln",
             //    //"-w",
@@ -32,7 +32,7 @@ namespace AIT.Tools.VisualStudioTextTransform
             //    //@"C:\Users\yangjiefeng\Documents\coding.net\pmall\docs\drafts\proj-creation-config.json",
             //    "-a", "Empty"
             //};
-            // ////////////////////////
+            //// ////////////////////////
             //System.Console.WriteLine(typeof(Uri).Assembly.Location); Console.ReadKey(); return 0;
             try
             {
@@ -121,7 +121,8 @@ namespace AIT.Tools.VisualStudioTextTransform
                 new Regex(String.Format("Generate{0}Domain.*\\.tt", aggregateName)),
                 new Regex("GenerateAggregates.*\\.tt"),
                 new Regex("GenerateBoundedContext.*\\.tt"),
-                new Regex("GenerateTrees.*\\.tt"),
+                //new Regex("GenerateBoundedContextDomainHibernate.*\\.tt"),
+                new Regex("GenerateTree.*\\.tt"),
                 new Regex(".*ForeignKeyConstraints\\.tt"),
                 new Regex(".*RViews\\.tt"),
                 new Regex(".*RViewNameConflictedTables\\.tt"),
@@ -129,7 +130,6 @@ namespace AIT.Tools.VisualStudioTextTransform
             };
             return patterns;
         }
-
      
 
     }
