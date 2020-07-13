@@ -127,6 +127,7 @@ namespace AIT.Tools.VisualStudioTextTransform
                 new Regex(".*RViews\\.tt"),
                 new Regex(".*RViewNameConflictedTables\\.tt"),
                 new Regex(".*StateConstraints\\.tt"),
+                new Regex("GenerateDomainServices.*\\.tt"),
             };
             return patterns;
         }
