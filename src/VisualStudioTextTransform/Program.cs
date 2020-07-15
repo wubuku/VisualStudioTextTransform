@@ -118,7 +118,7 @@ namespace AIT.Tools.VisualStudioTextTransform
             //GenerateBoundedContextDomainAggregatesMetadata.tt 更新元数据文件
             //GenerateAggregatesConfig.tt 更新配置文件
             var patterns = new Regex[] {
-                new Regex(String.Format("Generate{0}Domain.*\\.tt", aggregateName)),
+                new Regex(String.Format("Generate{0}.*\\.tt", aggregateName)),
                 new Regex("GenerateAggregates.*\\.tt"),
                 new Regex("GenerateBoundedContext.*\\.tt"),
                 //new Regex("GenerateBoundedContextDomainHibernate.*\\.tt"),
