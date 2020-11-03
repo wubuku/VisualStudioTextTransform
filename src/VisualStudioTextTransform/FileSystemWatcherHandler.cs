@@ -70,6 +70,9 @@ namespace AIT.Tools.VisualStudioTextTransform
                 return;
             }
             var configFile = options.ConfigFile;
+            // //////////////////////////////
+            Console.WriteLine("Start " + projToolFileName + ". Config file: " + configFile);
+            // //////////////////////////////
             Process p = new Process();
             p.StartInfo.FileName = projToolFileName;
             p.StartInfo.Arguments = String.Format(" {0} -u A", configFile);
@@ -130,6 +133,8 @@ namespace AIT.Tools.VisualStudioTextTransform
 
         private static void UpdateAggregate(string solutionFileName, string aggregateName)
         {
+            Console.WriteLine("VisualStudioTextTransform.exe start. Processing aggregate: " + aggregateName);
+            // //////////////////////////////
             Process p = new Process();
             p.StartInfo.FileName = typeof(Program).Assembly.Location;//"VisualStudioTextTransform.exe";
             p.StartInfo.Arguments = String.Format(" {0} -a {1}", solutionFileName, aggregateName);
@@ -181,7 +186,7 @@ namespace AIT.Tools.VisualStudioTextTransform
 
         static void p_Exited(Object sender, EventArgs e)
         {
-            Console.WriteLine("finish");
+            Console.WriteLine("Process exited.");
         }
 
         // //////////////////////////////
