@@ -69,9 +69,12 @@ namespace AIT.Tools.VisualStudioTextTransform
 
                 FileSystemWatcher watcher = new FileSystemWatcher();
                 watcher.Path = options.WatchtDir;//@"d:DownLoads";//args[1];
-
-                watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+                
+                watcher.NotifyFilter = 
+                    //NotifyFilters.LastAccess | 
+                    NotifyFilters.LastWrite | 
+                    NotifyFilters.FileName | 
+                    NotifyFilters.DirectoryName;
                 // Only watch text files.
                 watcher.Filter = "*.yaml";
                 // Add event handlers.              

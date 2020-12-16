@@ -95,7 +95,7 @@ namespace AIT.Tools.VisualStudioTextTransform
         /// <param name="e"></param>
         public void OnChanged(string solutionFileName, Options options, object source, FileSystemEventArgs e)
         {
-            var aggregateName = GetAggregateName(e, "CHANGED");
+            var aggregateName = GetAggregateName(e, "CHANGED, change type: " + e.ChangeType);
             MemCacheAdd(solutionFileName, aggregateName, options, e);
         }
 
