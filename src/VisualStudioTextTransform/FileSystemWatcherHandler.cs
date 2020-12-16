@@ -95,20 +95,20 @@ namespace AIT.Tools.VisualStudioTextTransform
         /// <param name="e"></param>
         public void OnChanged(string solutionFileName, Options options, object source, FileSystemEventArgs e)
         {
-            var aggregateName = GetAggregateName(e);
+            var aggregateName = GetAggregateName(e, "CHANGED");
             MemCacheAdd(solutionFileName, aggregateName, options, e);
         }
 
 
         public void OnCreated(string solutionFileName, Options options, object source, FileSystemEventArgs e)
         {
-            var aggregateName = GetAggregateName(e);
+            var aggregateName = GetAggregateName(e, "CREATED");
             MemCacheAdd(solutionFileName, aggregateName, options, e);
         }
 
         public void OnDeleted(string solutionFileName, Options options, object source, FileSystemEventArgs e)
         {
-            var aggregateName = GetAggregateName(e);
+            var aggregateName = GetAggregateName(e, "DELETED");
             MemCacheAdd(solutionFileName, aggregateName, options, e);
         }
 
@@ -123,8 +123,9 @@ namespace AIT.Tools.VisualStudioTextTransform
             _memCache.AddOrGetExisting(e.Name, val, _cacheItemPolicy);
         }
 
-        private static string GetAggregateName(FileSystemEventArgs e)
+        private static string GetAggregateName(FileSystemEventArgs e, string opEvent)
         {
+            Console.WriteLine(String.Format("File was {0} : {1}", opEvent, e.FullPath));
             var fp = e.FullPath;
             var fn = Path.GetFileName(fp);
             var aggregateName = fn.Substring(0, fn.LastIndexOf("."));
